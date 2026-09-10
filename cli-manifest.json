@@ -2527,6 +2527,50 @@
     "sourceFile": "antigravity/storage.js"
   },
   {
+    "site": "apple-login",
+    "name": "login",
+    "description": "Sign in to an Apple Account (email + password + 2FA) and land on the CloudKit Dashboard",
+    "access": "write",
+    "strategy": "cookie",
+    "browser": true,
+    "args": [
+      {
+        "name": "username",
+        "type": "str",
+        "required": false,
+        "help": "Apple ID email or phone (or set APPLE_LOGIN_USERNAME)"
+      },
+      {
+        "name": "password",
+        "type": "str",
+        "required": false,
+        "help": "Apple ID password (or set APPLE_LOGIN_PASSWORD)"
+      },
+      {
+        "name": "url",
+        "type": "str",
+        "required": false,
+        "help": "Apple ID sign-in URL (or set APPLE_LOGIN_URL)"
+      },
+      {
+        "name": "code",
+        "type": "str",
+        "required": false,
+        "help": "6-digit 2FA code sent to a trusted device; when omitted login stops at the 2FA step"
+      }
+    ],
+    "columns": [
+      "status",
+      "url",
+      "title",
+      "message"
+    ],
+    "type": "js",
+    "modulePath": "apple-login/login.js",
+    "sourceFile": "apple-login/login.js",
+    "navigateBefore": false
+  },
+  {
     "site": "apple-podcasts",
     "name": "episodes",
     "description": "List recent episodes of an Apple Podcast (use ID from search)",
