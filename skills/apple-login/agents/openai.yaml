@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple 登录"
+  short_description: "用 opencli 走 Apple 账号密码 + 2FA 登录 idmsa.apple.com（双击 #sign-in 触发密码 SRP 流，禁止通行密钥）"
+  default_prompt: "Use $apple-login to sign in to the Apple Account at idmsa.apple.com with account + password (double-click #sign-in; never the passkey), then fill the 2FA code and land on the CloudKit Dashboard. Drive the browser with opencli only; credentials come from the gitignored .env."
