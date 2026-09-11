@@ -83,15 +83,23 @@ cli({
     // instead of the password SRP flow. (Observed on idmsa.apple.com.)
     await page.wait({ time: 2 });
 
-    // 3. Submit (click "继续"). The iframe keeps the form; submission moves us
-    //    to either the 2FA page (on success) or stays on the password page
-    //    (on bad credentials). The Ember front-end updates asynchronously, so
-    //    poll detectStep until it leaves the 'password' step or we time out.
+    // 3. Submit (click "登录"). The #sign-in button needs to be clicked TWICE:
+    //    the first click triggers the passkey (SWP) device/challenge flow; the
+    //    second click cancels that and submits the password via the SRP flow
+    //    (POST /appleauth/auth/signin/init then /signin/complete). With a single
+    //    click the backend routes to the passkey challenge and the password is
+    //    never submitted, leaving the form stuck. (Validated 2026-09-11.)
     const clickRes = await page.evaluate(clickIframeButtonJs('#sign-in'));
     if (!clickRes?.ok) {
       throw new CliError('PARSE', 'Could not click the continue button', clickRes?.error || 'unknown');
     }
+    await page.wait({ time: 4 });
+    const clickRes2 = await page.evaluate(clickIframeButtonJs('#sign-in'));
+    if (!clickRes2?.ok) {
+      throw new CliError('PARSE', 'Could not click the continue button (2nd)', clickRes2?.error || 'unknown');
+    }
 
+    // Poll detectStep until it leaves the 'password' step or we time out.
     let step = 'password';
     for (let i = 0; i < 8; i++) {
       await page.wait({ time: 2 });
