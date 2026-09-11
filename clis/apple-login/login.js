@@ -77,6 +77,12 @@ cli({
       throw new CliError('PARSE', 'Could not fill Apple ID password field', pwRes?.error || 'unknown');
     }
 
+    // Let Apple's Ember components process the input events before submitting.
+    // Clicking too fast after filling causes Ember to submit with an empty
+    // password model and the backend routes to the passkey (SWP) challenge
+    // instead of the password SRP flow. (Observed on idmsa.apple.com.)
+    await page.wait({ time: 2 });
+
     // 3. Submit (click "继续"). The iframe keeps the form; submission moves us
     //    to either the 2FA page (on success) or stays on the password page
     //    (on bad credentials). The Ember front-end updates asynchronously, so
